@@ -26,11 +26,20 @@ def refresh():
 def get_password(ssid=None):
     if ssid is None:
         return redirect(url_for('index'))
-    else:
-        session['ssid'] = ssid
-
     if request.method == 'GET':
-        return render_template('passwd.html')
+        return render_template('passwd.html',
+                               ssid=ssid)
+
+    elif request.method == 'POST':
+        # Command Injection~!
+        password = request.form['password']
+        result = os.popen('bash shell_scripts/connect_wifi.sh %s %s' % (ssid, password)).read()
+        if result == "You're connected.\n":
+            return "Success!"
+        else:
+            return render_template('passwd.html',
+                                   ssid=ssid,
+                                   message="Fail...")
 
 
 @app.route('/')

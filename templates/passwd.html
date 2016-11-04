@@ -1,4 +1,10 @@
-<form action="{{ url_for('get_password', ssid=session['ssid']) }}" method="post">
+{% if message is defined %}
+    {{ message }}
+{% endif %}
+
+Try Connect with {{ ssid }}
+
+<form action="{{ url_for('get_password', ssid=ssid) }}" method="post">
     <input type="text" name="password">
     <input type="submit" value="Commit">
 </form>
