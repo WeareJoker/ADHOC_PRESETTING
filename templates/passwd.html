@@ -1,0 +1,4 @@
+<form action="{{ url_for('get_password', ssid=session['ssid']) }}" method="post">
+    <input type="text" name="password">
+    <input type="submit" value="Commit">
+</form>

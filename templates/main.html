@@ -1,1 +1,6 @@
-Hello World!
+<a href="{{ url_for('refresh') }}">Refresh SSID list</a><br>
+<br>
+{% for ssid in session['essid_list'] %}
+    <a href="{{ url_for('get_password', ssid=ssid) }}">{{ ssid }}</a>
+    <br>
+{% endfor %}
