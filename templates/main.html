@@ -4,3 +4,9 @@
     <a href="{{ url_for('get_password', ssid=ssid) }}">{{ ssid }}</a>
     <br>
 {% endfor %}
+
+<script>
+     setInterval(function() {
+         location.href = '/refresh';
+     }, 4000);
+</script>
