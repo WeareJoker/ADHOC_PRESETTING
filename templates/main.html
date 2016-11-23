@@ -1,12 +1,28 @@
 <a href="{{ url_for('refresh') }}">Refresh SSID list</a><br>
+<p> Which AP do you want your raspberry pi to connect to?
+<br> Choose one of them. </p> <br>
 <br>
 {% for ssid in session['essid_list'] %}
     <a href="{{ url_for('get_password', ssid=ssid) }}">{{ ssid }}</a>
     <br>
 {% endfor %}
 
+{% if not now_decrypting %}
+	<br>
+	<p> Which AP do you want to sniff?
+	<br> Choose one of them. </p> <br>
+	<br>
+
+	{% for ssid in session['essid_list'] %}
+		<a href="{{ url_for('get_password_sniff', ssid=ssid) }}"> {{ ssid }} </a>
+		<br>
+	{% endfor %}
+{% else %}
+<br><p> It is already decrypting now</p><br>
+<p> If you want to stop it from sniffing, click <a href="{{ url_for('stop_sniff') }}">here</a></p>
+{% endif %}
 <script>
      setInterval(function() {
          location.href = '/refresh';
-     }, 4000);
+     }, 20000);
 </script>
