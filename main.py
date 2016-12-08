@@ -81,16 +81,18 @@ def get_password_sniff(ssid=None):
         iface = "wlx18a6f71cbc0b"
         raw_channel_data = os.popen('iwlist %s scan | grep -E "ESSID|Channel:"' % iface).read()
 
+        tmp_channel = None
+
         for info in raw_channel_data.split('\n'):
             # is it ESSID?
-            if info.strip()[0] == "E":
-                if info.strip()[7:-1] == ssid:
-                    channel = tmp_chan
-                    break
+            strip_data = info.strip()
+            if tmp_channel is not None and strip_data[0] == "E" and strip_data[7:-1] == ssid:
+                channel = tmp_channel
+                break
 
             # is it channel?
             else:
-                tmp_chan = info.strip()[8:]
+                tmp_channel = strip_data[8:]
 
         with open("/pjhs/autorun_setting", "wt") as f:
             f.write("%s %s %s %s" % ("wpa", ssid, password, channel))
