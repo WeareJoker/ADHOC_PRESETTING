@@ -11,6 +11,7 @@
 		    line-height: 1.42857143;
 		    color: #333;
 		}
+
 	 </style>
     <!-- 부트스트랩 -->
     <link href="{{ url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
@@ -20,9 +21,14 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
+
+
   <body>
     <script src="{{ url_for('static', filename = 'js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/bootstrap.min.js') }}"></script>
+
+
+
 
   <div class="container">
 	<a href="{{ url_for('refresh') }}">Refresh SSID list</a><br>
@@ -31,144 +37,118 @@
 	</h2>
 	<br>
 
-  	<div class="row">
-			<div class="page-header">
-				<h2 style="color:#000000;">
-					WiFi Connect & Sniff
-				</h2>
-			</div>
-			<table class = "table table-striped table-hover">
-					<caption> AP LIST YOUR PI CAN BE CONNECTED TO </caption>
+	    <ul id="myTab" class="nav nav-tabs" role="tablist">
+	      <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Network Configuration</a></li>
+	      <li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">Extracted Database</a></li>
+	    </ul>
+	    <div id="myTabContent" class="tab-content">
+	      <div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledby="home-tab">
+		  	<div class="row">
+					<div class="page-header">
+						<h2 style="color:#000000;">
+							WiFi Connect & Sniff
+						</h2>
+					</div>
+					<table class = "table table-striped table-hover">
+							<caption> AP LIST YOUR PI CAN BE CONNECTED TO </caption>
 
-				    <thead>
-				        <tr>
-				          <th>#</th>
-				          <th>SSID</th>
-				          <th>Address</th>
-				          <th>Channel</th>
-				          <th>Encryption</th>
-				          <th>Connect</th>
-				          <th>Sniff</th>
-				        </tr>
-					</thead>
-					{% for record in essid_list %}
-					<tbody>
-				        <tr>
-				          <th scope="row">{{ record.id }} </th>
-				          <td style="width:20%;"> {{ record.ESSID }} </th>
-				          <td style="width:15%;"> {{ record.Address }} </td>
-				          <td style="padding-left:30px;"> {{ record.Channel }} </td>
-				          <td>
-					          {% if not record.encryption %}
-					          	Open
-					          {% else %}
-					            WPA2
-					          {% endif %}
-						  </td>
-				          <td>
-				          	{% if not record.is_connected %}
-				          	<button  type="button" class="btn btn-danger" data-toggle="collapse" data-target="#collapse{{ record.id }}" aria-expanded="false" aria-controls="collapse{{ record.id }}">Not connected</button>
+						    <thead>
+						        <tr>
+						          <th>#</th>
+						          <th>SSID</th>
+						          <th>Address</th>
+						          <th>Channel</th>
+						          <th>Encryption</th>
+						          <th>Connect</th>
+						          <th>Sniff</th>
+						        </tr>
+							</thead>
+							{% for record in essid_list %}
+							<tbody>
+						        <tr>
+						          <th scope="row">{{ record.id }} </th>
+						          <td style="width:20%;"> {{ record.ESSID }} </th>
+						          <td style="width:15%;"> {{ record.Address }} </td>
+						          <td style="padding-left:30px;"> {{ record.Channel }} </td>
+						          <td>
+							          {% if not record.encryption %}
+							          	Open
+							          {% else %}
+							            WPA2
+							          {% endif %}
+								  </td>
+						          <td>
+						          	{% if not record.is_connected %}
+						          	<button  type="button" class="btn btn-danger" data-toggle="collapse" data-target="#collapse{{ record.id }}" aria-expanded="false" aria-controls="collapse{{ record.id }}">Not connected</button>
 
-				          	<div class="collapse" id="collapse{{ record.id }}" >
-			  				  <div class="well" style="width:60%;">
-				  				  <form action="{{ url_for('connect_wifi') }}" method="post" id="con{{ record.id }}">
-				  				  	<input type="hidden" name="ESSID" value="{{record.ESSID}}" >
-				  				  	{% if not record.encryption %}
-				  				  		<input type="text" size=15 name="AP_password" placeholder="don't need" disabled>
-					          		{% else %}
-										<input type="text" size=15 name="AP_password" placeholder="input password">
-					                {% endif %}
-				  				  	<button type="button" class="btn btn-primary btn-sm" style="float:right;" onclick="document.getElementById('con{{record.id}}').submit()"> Connect </button>
-				  				  </form>
-							  </div>
-					  		</div>
-					  		{% else %}
-					  		<button  type="button" class="btn btn-success" disabled>Connected</button>
-					  		{% endif %}
-				          </td>
-					      <td>
-					      {% if not now_decrypting %}
-					          <button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#collapse-sniff{{ record.id }}" aria-expanded="false" aria-controls="collapse-sniff{{ record.id }}">Sniff</button>
-					          <div class="collapse" id="collapse-sniff{{ record.id }}">
-				  				  <div class="well">
-					  				  <form action="{{ url_for('start_sniff') }}" method="post" id="snif{{ record.id }}">
+						          	<div class="collapse" id="collapse{{ record.id }}" >
+					  				  <div class="well" style="width:60%;">
+						  				  <form action="{{ url_for('connect_wifi') }}" method="post" id="con{{ record.id }}">
+						  				  	<input type="hidden" name="ESSID" value="{{record.ESSID}}" >
+						  				  	{% if not record.encryption %}
+						  				  		<input type="text" size=15 name="AP_password" placeholder="don't need" disabled>
+							          		{% else %}
+												<input type="text" size=15 name="AP_password" placeholder="input password">
+							                {% endif %}
+						  				  	<button type="button" class="btn btn-primary btn-sm" style="float:right;" onclick="document.getElementById('con{{record.id}}').submit()"> Connect </button>
+						  				  </form>
+									  </div>
+							  		</div>
+							  		{% else %}
+							  		<button  type="button" class="btn btn-success" disabled>Connected</button>
+							  		{% endif %}
+						          </td>
+							      <td>
+							      {% if not now_decrypting %}
+							          <button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#collapse-sniff{{ record.id }}" aria-expanded="false" aria-controls="collapse-sniff{{ record.id }}">Sniff</button>
+							          <div class="collapse" id="collapse-sniff{{ record.id }}">
+						  				  <div class="well">
+							  				  <form action="{{ url_for('start_sniff') }}" method="post" id="snif{{ record.id }}">
 
-					  				  	<input type="hidden" value="{{ record.ESSID }}" name="ESSID">
-					  				  	<input type="hidden" value="{{ record.channel }}" name ="channel">
-					  				  	<input type="hidden" value="{{ record.encryption }}" name ="encryption">
-				  				  	{% if not record.encryption %}
-				  				  		<input type="text" size=15 name="AP_password" placeholder="don't need" disabled>
-					          		{% else %}
-										<input type="text" size=15 name="AP_password" placeholder="input password">
-					                {% endif %}
-					  				  	<button type="button" class="btn btn-primary btn-sm" style="float:right;" onclick="document.getElementById('snif{{record.id}}').submit()"> Start to Sniff </button>
-					  				  </form>
-								  </div>
-							  </div>
-							{% else %}
-							<form action="{{ url_for('stop_sniff') }}" id="stop_sniff">
-								<button type="button" class="btn btn-danger" onclick="document.getElementById('stop_sniff').submit()">Stop</button>
-							</form>
-							{% endif %}
+							  				  	<input type="hidden" value="{{ record.ESSID }}" name="ESSID">
+							  				  	<input type="hidden" value="{{ record.channel }}" name ="channel">
+							  				  	<input type="hidden" value="{{ record.encryption }}" name ="encryption">
+						  				  	{% if not record.encryption %}
+						  				  		<input type="text" size=15 name="AP_password" placeholder="don't need" disabled>
+							          		{% else %}
+												<input type="text" size=15 name="AP_password" placeholder="input password">
+							                {% endif %}
+							  				  	<button type="button" class="btn btn-primary btn-sm" style="float:right;" onclick="document.getElementById('snif{{record.id}}').submit()"> Start to Sniff </button>
+							  				  </form>
+										  </div>
+									  </div>
+									{% else %}
+									<form action="{{ url_for('stop_sniff') }}" id="stop_sniff">
+										<button type="button" class="btn btn-danger" onclick="document.getElementById('stop_sniff').submit()">Stop</button>
+									</form>
+									{% endif %}
 
-					      </td>
-				        </tr>
-				    </tbody>
+							      </td>
+						        </tr>
+						    </tbody>
 
-				{% endfor %}
+						{% endfor %}
 
-				</table>
+						</table>
+				</div>
+	
+	       
+	      </div>
+	      <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
+	      	<!--  hyunwoo nim yogi e yo! -->
+	      	<iframe>
+	      	 
+	      	</iframe>  
+	   	  </div>
+	  
 
-<!--		<div class="span6">
-			<div class="page-header">
-				<h2 style="color:#000000;">
-					Sniff
-				</h2>
-			</div>
-		{% if not now_decrypting %}
-		
-				<table class = "table table-striped table-hover">
-				<caption> AP LIST YOU CAN SNIFF</caption>
 
-			    <thead>
-			        <tr>
-				          <th>#</th>
-				          <th>SSID</th>
-				          <th>Address</th>
-				          <th>Channel</th>
-				          <th>Sniff</th>
-			        </tr>
-				</thead>
-				
-				{% for record in essid_list %}
-					<tbody>
-			        <tr>
-			          <th scope="row">{{ record.id }} </th>
-			          <td> {{ record.ESSID }} </th>
-			          <td> {{ record.Address }} </td>
-			          <td style="text-align:center;"> {{ record.Channel }} </td>
-			          <td>
-			          <button type="button" class="btn btn-warning" data-toggle="collapse" data-target="#collapse-sniff{{ record.id }}" aria-expanded="false" aria-controls="collapse-sniff{{ record.id }}">Sniff</button>
-			          <div class="collapse" id="collapse-sniff{{ record.id }}">
-		  				  <div class="well">
-			  				  <form action="#" >
-			  				  	<input type="text" size="15" placeholder="AP password">
-			  				  	<button type="button" class="btn btn-primary btn-sm" style="float:right;"> Start to Sniff </button>
-			  				  </form>
-						  </div>
-					  </div>
-			          </td>
-			        </tr>
-			    	</tbody>
-				{% endfor %}
-				</table>
-		{% else %}
-		<br><p> It is already decrypting now</p><br>
-		<p> If you want to stop it from sniffing, click <a href="{{ url_for('stop_sniff') }}">here</a></p>
-		{% endif %}
-	 </div>
-	 -->
-	</div>
+
    </div>
   </body>
 </html>
+<script>
+$('.carousel').carousel({
+	wrap: false
+})
+</script>

@@ -35,7 +35,7 @@ fi
 if [[ "$iface" -le ${i} ]]; then
     #read -p "Enter the SSID or BSSID: " b_ssid # Prompts the user for the ESSID/BSSID
     #read -p "Enter the password: " pass # Prompts the user for the password
-    output=$(nmcli device wifi connect $1 password $2 iface wlan0 --timeout 10) # Tries to connect
+    output=$(nmcli device wifi connect $1 password $2 iface $3 --timeout 10) # Tries to connect
     wget -q --tries=5 --timeout=5 --spider http://google.com &> /dev/null # Is connected to Internet?
     if [[ $? -eq 0 ]]; then
             echo "You're connected." # Is connected to Internet
