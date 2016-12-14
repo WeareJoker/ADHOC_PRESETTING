@@ -1,4 +1,4 @@
-# ADHOC PRESETTING
+# MASTER MODE PRESETTING
 Master Mode 이용한 라즈베리 설정 프로그램
 
 부팅 후, "pjhs" 네트워크에 접속해 http://192.168.0.1 로 들어가게 되면
