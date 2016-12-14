@@ -1,5 +1,5 @@
-# ADHOC PRESETTING
-Ad-Hoc 을 이용한 라즈베리 설정 프로그램
+# MASTER MODE PRESETTING
+Master Mode 이용한 라즈베리 설정 프로그램
 
 부팅 후, "pjhs" 네트워크에 접속해 http://192.168.0.1 로 들어가게 되면
 무선 네트워크를 연결할 수 있는 웹페이지 나옴.

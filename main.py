@@ -139,14 +139,16 @@ def connect_wifi():
         essid = request.form['ESSID']
         AP_password = request.form['AP_password']
         bash_path = os.path.join(app.root_path, "shell_scripts/connect_wifi.sh")
+        inet_iface = app.config['inet_iface']
 
         
-        result = os.popen('bash %s %s %s' % (bash_path, essid, AP_password)).read()
+        result = os.popen('bash %s %s %s %s' % (bash_path, essid, AP_password, inet_iface)).read()
         #if result == "You're connected.\n":
         #    return "Success!"
         #else:
     
     return redirect(url_for('main'))
+
 @app.route('/start_sniff', methods=['POST'])
 def start_sniff():
     if request.method == 'POST':
@@ -229,7 +231,6 @@ def main():
         now_essid = None
 
     wdec_pid = os.popen("ps -ef | grep wdecrypt | awk '{print $2}'").read()
-    print(wdec_pid)
     if len(wdec_pid.split('\n')) > 3:
         now_decrypting = 1
     else:
